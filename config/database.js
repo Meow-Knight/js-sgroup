@@ -1,14 +1,27 @@
 const mongoose = require('mongoose');
 
 const ArticleModel = require('../model/article');
+const UserModel = require('../model/user');
+
+const bcrypt = require('bcrypt');
 
 module.exports = async () => {
     try {
+        const DEFAULT_PWD = bcrypt.hashSync('123456', 10);
+
         await mongoose.connect('mongodb://localhost:27017/training', { 
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
         console.log('Connected to mongodb')
+
+        await UserModel.deleteMany();
+        await UserModel.insertMany([
+            {
+                username: 'huy@gmail.com',
+                password: DEFAULT_PWD,
+            }
+        ]);
 
         await ArticleModel.deleteMany();
         await ArticleModel.insertMany([

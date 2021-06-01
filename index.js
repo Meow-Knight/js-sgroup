@@ -2,9 +2,12 @@ const express = require('express');
 const {join} = require('path');
 const slug = require('slugify');
 const methodOverride = require('method-override')
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
 
 const database = require('./config/database');
 const Article = require('./model/article');
+const UserModel = require('./model/user');
 const {PORT} = require('./env');
 
 const PUBLIC_PATH = join(__dirname, 'public');
@@ -16,6 +19,8 @@ database();
 app.set('view engine', 'pug');
 app.set('views', join(__dirname, 'views'));
 
+app.use(cookieParser('MY SECRET'));
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(methodOverride('_method'))
@@ -25,6 +30,34 @@ app.use(express.static(PUBLIC_PATH, {
     maxAge: 8000
 }));
 
+app.get('/login', (req, res) => {
+    return res.render('./pages/login.pug');
+});
+
+app.post('/login', async(req, res) => {
+    const user = await UserModel.findOne({
+        username: req.body.email
+    });
+
+    if (!user || !bcrypt.compareSync(req.body.password, user.password)){
+        return res.render('pages/error.pug', {
+            error: 'Email not found',
+        });
+    }
+
+    const userInformation = {
+        id: user._id,
+        username: user.username
+    }
+
+    res.cookie('user', userInformation, {
+        httpOnly: true,
+        signed: true
+    });
+
+    return res.redirect('/');
+
+})
 // Pages
 app.get('/', async (req, res) => {
     const articles = await Article.find().sort('-createdAt');
