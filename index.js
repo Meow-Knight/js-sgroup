@@ -34,6 +34,8 @@ app.get('/login', (req, res) => {
     return res.render('./pages/login.pug');
 });
 
+// chua lam bt2
+
 app.post('/login', async(req, res) => {
     const user = await UserModel.findOne({
         username: req.body.email
