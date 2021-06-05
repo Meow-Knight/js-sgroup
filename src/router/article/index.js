@@ -1,78 +1,14 @@
 const express = require('express');
-const {join} = require('path');
-const slug = require('slugify');
-const methodOverride = require('method-override')
-const cookieParser = require('cookie-parser');
-const bcrypt = require('bcrypt');
+const router = express.Router();
 
-const database = require('./config/database');
-const Article = require('./model/article');
-const UserModel = require('./model/user');
-const {PORT} = require('./env');
+const Article = require('../../model/article');
 
-const PUBLIC_PATH = join(__dirname, 'public');
 
-const app = express();
-
-database();
-
-app.set('view engine', 'pug');
-app.set('views', join(__dirname, 'views'));
-
-app.use(cookieParser('MY SECRET'));
-
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
-app.use(methodOverride('_method'))
-app.use(express.static(PUBLIC_PATH, {
-    etag: true,
-    cacheControl: true,
-    maxAge: 8000
-}));
-
-app.get('/login', (req, res) => {
-    return res.render('./pages/login.pug');
-});
-
-// chua lam bt2
-
-app.post('/login', async(req, res) => {
-    const user = await UserModel.findOne({
-        username: req.body.email
-    });
-
-    if (!user || !bcrypt.compareSync(req.body.password, user.password)){
-        return res.render('pages/error.pug', {
-            error: 'Email not found',
-        });
-    }
-
-    const userInformation = {
-        id: user._id,
-        username: user.username
-    }
-
-    res.cookie('user', userInformation, {
-        httpOnly: true,
-        signed: true
-    });
-
-    return res.redirect('/');
-
-})
-// Pages
-app.get('/', async (req, res) => {
-    const articles = await Article.find().sort('-createdAt');
-    return res.render('pages/home.pug', {
-        articles
-    });
-})
-
-app.get('/articles/new', (req, res, next) => {
+router.get('/new', (req, res, next) => {
     return res.render('pages/newArticle.pug');
 })
 
-app.get('/articles/:slug/update', async (req, res, next) => {
+router.get('/:slug/update', async (req, res, next) => {
     const { slug } = req.params;
     const article = await Article.findOne({ slug });
     if (!article) {
@@ -85,7 +21,7 @@ app.get('/articles/:slug/update', async (req, res, next) => {
     });
 })
 
-app.get('/articles/:slug', async (req, res) => {
+router.get('/:slug', async (req, res) => {
     const { slug } = req.params;
     const article = await Article.findOne({ slug });
     if (!article) {
@@ -99,7 +35,7 @@ app.get('/articles/:slug', async (req, res) => {
 })
 
 // APIs
-app.post('/articles', async (req, res) => {
+router.post('/', async (req, res) => {
     let createSuccess = true;
     const articleExisted = await Article.findOne({title: req.body.title});
 
@@ -121,7 +57,7 @@ app.post('/articles', async (req, res) => {
     });
 })
 
-app.put('/articles/:slug', async (req, res) => {
+router.put('/:slug', async (req, res) => {
     const {slug} = req.params;
 
     const article = await Article.findOne({ slug });
@@ -144,7 +80,7 @@ app.put('/articles/:slug', async (req, res) => {
     return res.redirect('/');
 })
 
-app.delete('/articles/:slug', async (req, res) => {
+router.delete('/:slug', async (req, res) => {
     const {slug} = req.params;
 
     const article = await Article.findOne({ slug });
@@ -167,6 +103,5 @@ app.delete('/articles/:slug', async (req, res) => {
     return res.redirect('/');
 })
 
-app.listen(PORT, () => {
-    console.log(`Server is listening on ${PORT}`)
-});
+
+module.exports = router;
