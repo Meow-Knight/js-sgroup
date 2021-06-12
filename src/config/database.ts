@@ -19,7 +19,7 @@ export default async () => {
         await UserModel.deleteMany();
         await UserModel.insertMany([
             {
-                username: 'huy@gmail.com',
+                email: 'huy@gmail.com',
                 password: DEFAULT_PWD,
             }
         ]);

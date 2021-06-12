@@ -6,7 +6,7 @@ import database from './config/database';
 import Article from './model/article';
 import UserModel from './model/user';
 import envConfig from './env';
-import router from './router/index';
+import router from './core/index';
 
 const ROOT_DIR = process.cwd();
 const PUBLIC_PATH = join(ROOT_DIR, 'public');

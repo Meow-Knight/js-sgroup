@@ -5,8 +5,8 @@ const SessionSchema = new Schema({
         _id: String,
         username: String,
     },
-    expired: Number, // Use logout when expired comes
-    renewTime: Number // Check if user is no longer working in that session
+    expired: Number,
+    renewTime: Number
 });
 
 const SessionModel = model('session', SessionSchema);

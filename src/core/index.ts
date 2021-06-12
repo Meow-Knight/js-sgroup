@@ -3,8 +3,8 @@ import Article from '../model/article';
 
 const router = express.Router();
 
-import articleRouter from './article/index';
-import authRouter from './auth/index';
+import articleRouter from '../core/article/index';
+import authRouter from './auth/router';
 
 import { authRequired, authNotRequired } from '../middleware/auth.middleware';
 
