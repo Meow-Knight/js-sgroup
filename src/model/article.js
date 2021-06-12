@@ -1,6 +1,8 @@
-const {model, Schema} = require('mongoose');
-
-const ArticleSchema = new Schema({
+"use strict";
+exports.__esModule = true;
+var mongoose_1 = require("mongoose");
+var updateHook_1 = require("./hook/updateHook");
+var ArticleSchema = new mongoose_1.Schema({
     title: String,
     content: String,
     slug: String,
@@ -11,13 +13,6 @@ const ArticleSchema = new Schema({
         type: Date
     }
 });
-ArticleSchema.pre('save', function() {
-    if (!this.createdAt) {
-        this.createdAt = Date.now();
-    }
-    this.updatedAt = Date.now();
-});
-
-const ArticleModel = model('articles', ArticleSchema);
-
-module.exports = ArticleModel;
+ArticleSchema.pre('save', updateHook_1.updateHook);
+var ArticleModel = mongoose_1.model('articles', ArticleSchema);
+exports["default"] = ArticleModel;
