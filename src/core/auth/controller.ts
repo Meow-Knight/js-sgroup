@@ -1,50 +1,39 @@
 import { NextFunction, Request, Response } from "express";
-import UserModel from "../../model/user";
-import bcrypt from 'bcrypt';
 import SessionModel from "../../model/session";
-import { v4 as uuidv4 } from 'uuid';
-import { loginDto, ILoginDto } from './dto/login.dto';
+import { loginDto } from './dto/login.dto';
 import envConfig from "../../env";
+import { authService } from "./service";
 
 
 class Controller {
+    private authService;
+
+    constructor (){
+        this.authService = authService;
+    }
     login = async (req : Request, res: Response, next: NextFunction) => {
-        const dto : ILoginDto = loginDto(req);
-    
-        const user = await UserModel.findOne({
-            email: dto.email
-        });
-    
-        if (!user || !bcrypt.compareSync(dto.password, user.password)) {
+        const loginCase = Number.parseInt(req.query.case as string);
+
+        try {
+            const sessionId = await this.authService.loginWithCase(loginDto(req.body), loginCase);
+
+            if (!sessionId) {
+                return res.render('pages/error.pug', {
+                    error: 'This account is using!'
+                });
+            }
+
+            res.cookie('sessionId', sessionId, {
+                httpOnly: true,
+                signed: true,
+                maxAge: Date.now() + envConfig.SESSION_EXPIRED
+            });
+            return res.redirect('/');
+        } catch (error) {
             return res.render('pages/error.pug', {
-                error: `Email not found to login`
+                error: error
             });
         }
-    
-        const currentSession = await SessionModel.findOne({
-            'user._id': user._id
-        });
-    
-        if (currentSession){
-            if (currentSession.expired < Date.now() || currentSession.renew < Date.now()){
-                await SessionModel.deleteOne(currentSession);
-            } else {
-                return res.redirect('/auth/login');
-            }
-        }
-    
-        const newSession = await SessionModel.create({
-            user: user,
-            expired: Date.now() + envConfig.SESSION_EXPIRED,
-            renewTime: Date.now() + envConfig.SESSION_RENEW
-        });
-    
-        res.cookie('sessionId', newSession._id, {
-            httpOnly: true,
-            signed: true,
-            maxAge: Date.now() + envConfig.SESSION_EXPIRED
-        });
-        return res.redirect('/');
     }
     
     logout = async (req: Request, res: Response, next: NextFunction) => {

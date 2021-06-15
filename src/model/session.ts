@@ -1,6 +1,20 @@
-import { model, Schema } from 'mongoose';
+import { Document, model, Schema } from 'mongoose';
 
-const SessionSchema = new Schema({
+export interface SessionPayload {
+    _id: string;
+    username: string;
+}
+
+export interface ISessionSchema extends Document {
+    user: {
+        _id: String,
+        username: String,
+    },
+    expired: Number,
+    renewTime: Number
+}
+
+const SessionSchema = new Schema<ISessionSchema>({
     user: {
         _id: String,
         username: String,
@@ -9,6 +23,6 @@ const SessionSchema = new Schema({
     renewTime: Number
 });
 
-const SessionModel = model('session', SessionSchema);
+const SessionModel = model<ISessionSchema>('session', SessionSchema);
 
 export default SessionModel;
