@@ -11,6 +11,12 @@ router.get('/login', (req, res) => {
 
 router.post('/login', validate, AuthController.login);
 
-router.get('/logout', AuthController.logout);
+router.post('/logout', AuthController.logout);
+
+router.get('/register', (req, res) => {
+    return res.render("pages/register.pug");
+});
+
+router.post('/register', AuthController.register);
 
 export default router;

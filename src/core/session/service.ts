@@ -21,6 +21,12 @@ class SessionService implements ISessionService {
             'user._id': userId
         });
     }
+
+    async deleteById(sessionId: String) : Promise<void> {
+        await SessionModel.deleteOne({
+            _id: sessionId,
+        });
+    }
 }
 
 export const sessionService : ISessionService = new SessionService();

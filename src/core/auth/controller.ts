@@ -2,14 +2,17 @@ import { NextFunction, Request, Response } from "express";
 import SessionModel from "../../model/session";
 import { loginDto } from './dto/login.dto';
 import envConfig from "../../env";
-import { authService } from "./service";
+import { authService } from "./impl/serviceImpl";
+import { sessionService } from "../session/service";
 
 
 class Controller {
     private authService;
+    private sessionService;
 
     constructor (){
         this.authService = authService;
+        this.sessionService = sessionService;
     }
     login = async (req : Request, res: Response, next: NextFunction) => {
         const loginCase = Number.parseInt(req.query.case as string);
@@ -52,9 +55,8 @@ class Controller {
         }
     
         try {
-            await SessionModel.deleteOne({
-                _id: sessionId
-            });
+            this.sessionService.deleteById(sessionId);
+            res.clearCookie('sessionId');
     
             return res.status(203).json({
                 "message": "logout success!"
@@ -65,6 +67,22 @@ class Controller {
                 "message": "cannot logout",
             })
         }
+    }
+
+    register = (req: Request, res: Response, next: NextFunction) => {
+        const dto = loginDto(req);
+
+        try {
+            this.authService.register(dto);
+        } catch (error) {
+            return res.status(409).json({
+                msg: error,
+            })
+        }
+
+        return res.status(200).json({
+            msg: "Register successful"
+        })
     }
 }
 
