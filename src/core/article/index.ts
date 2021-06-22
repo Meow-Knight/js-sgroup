@@ -22,8 +22,14 @@ router.post('/', async (req, res) => {
         createSuccess = false
     }
 
-    return createSuccess ? res.redirect('/') : res.render('pages/error.pug', {
-        error: `This article with title ${req.body.title} has been existed`
+    // return createSuccess ? res.redirect('/') : res.render('pages/error.pug', {
+    //     error: `This article with title ${req.body.title} has been existed`
+    // });
+
+    return createSuccess ? res.status(200).json({
+        msg: "create successful"
+    }) : res.status(400).json({
+        msg: "failed"
     });
 })
 
