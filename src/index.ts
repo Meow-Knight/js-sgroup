@@ -3,8 +3,6 @@ import { join } from 'path';
 import cookieParser from 'cookie-parser';
 
 import database from './config/database';
-import Article from './model/article';
-import UserModel from './model/user';
 import envConfig from './env';
 import router from './core/index';
 

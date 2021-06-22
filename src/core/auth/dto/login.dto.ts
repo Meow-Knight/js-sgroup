@@ -5,9 +5,9 @@ export interface ILoginDto {
     password: string,
 };
 
-export function loginDto(res: Request | any) : ILoginDto {
+export function loginDto(body: Request | any) : ILoginDto {
     return {
-        email: res.body.email,
-        password: res.body.password
+        email: body.email,
+        password: body.password
     }
 }

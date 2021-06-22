@@ -59,11 +59,12 @@ class AuthServiceImpl implements AuthService {
         const user = await UserModel.findOne({
             email: dto.email
         });
-
+        console.log(dto.email);
+        console.log(user);
+        
         if (user) {
             throw Error("This email is already existed");
         }
-
         dto.password = bcrypt.hashSync(dto.password, 10);
         await UserModel.create(dto);
     }

@@ -40,7 +40,7 @@ class Controller {
     }
     
     logout = async (req: Request, res: Response, next: NextFunction) => {
-        const sessionId = req.signedCookies;
+        const { sessionId } = req.signedCookies;
     
         if (!sessionId){
             return res.send("You didn't login");
@@ -69,11 +69,11 @@ class Controller {
         }
     }
 
-    register = (req: Request, res: Response, next: NextFunction) => {
-        const dto = loginDto(req);
+    register = async (req: Request, res: Response) => {
+        const dto = loginDto(req.body);
 
         try {
-            this.authService.register(dto);
+            await this.authService.register(dto);
         } catch (error) {
             return res.status(409).json({
                 msg: error,

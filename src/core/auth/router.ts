@@ -11,7 +11,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', validate, AuthController.login);
 
-router.post('/logout', AuthController.logout);
+router.get('/logout', AuthController.logout);
 
 router.get('/register', (req, res) => {
     return res.render("pages/register.pug");
