@@ -15,19 +15,18 @@ router.post('/', async (req, res) => {
 
     req.body.slug = slug(req.body.title);
 
+    let newArticle;
     try {
-        await Article.create(req.body);
+        newArticle = await Article.create(req.body);
+        newArticle.save();
     } catch (error) {
         console.log(error);
         createSuccess = false
     }
 
-    // return createSuccess ? res.redirect('/') : res.render('pages/error.pug', {
-    //     error: `This article with title ${req.body.title} has been existed`
-    // });
-
     return createSuccess ? res.status(200).json({
-        msg: "create successful"
+        msg: "create successful",
+        articleId: newArticle.id,
     }) : res.status(400).json({
         msg: "failed"
     });

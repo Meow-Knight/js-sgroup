@@ -10,6 +10,7 @@ import { authRequired, authNotRequired } from '../middleware/auth.middleware';
 
 router.get('/', authRequired, async(req, res) => {
     const articles = await Article.find().sort('-createdAt');
+    
     return res.render('pages/home.pug', {
         articles
     });

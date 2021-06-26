@@ -9,8 +9,15 @@ block content
         .form-group
             label Content
             textarea#content.form-control(rows='3' name='content')
-        button.btn.btn-primary(type='submit') Create
+        .form-group
+            label Thubmthum
+            input#img-imgload(type='file' name='filename' accept='image/gif, image/jpeg, image/png')
+        button#button-create.btn.btn-primary(type='submit') Create
+        #spinner.spinner-border.text-primary.my-4.d-none(role='status')
+            span.sr-only
 
 
 block scripts
+    script(src="https://code.jquery.com/jquery-3.6.0.min.js") 
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js") 
     script(src='/js/article.js')

@@ -2,15 +2,17 @@ extends ../layout/main.pug
 
 block content
     h3 Nổi bật hôm nay
-    img(src='/img/myface.jpg' width="300px")
-    ul
+    ul.d-flex.justify-content-around.flex-wrap(stye="display: flex;")
       each article in articles
-        li 
-           div.my-3
-              p 
+        li.my-1.list-group-item.border-0(style="flex: 0 0 33%")
+          .card(style='width: 18rem;')
+            img.card-img-top(src=article.imgUrl alt='Card image cap')
+            .card-body
+              h5.card-title 
                 a(href=`http://localhost:3000/articles/${article.slug}`)
                   strong #{article.title}
-              p #{article.content}
+              p.card-text
+                p #{article.content}
               button.mx-2.btn.btn-primary 
                 a.btn-primary(href=`http://localhost:3000/articles/${article.slug}/update`) Update 
               button.mx-2.btn.btn-danger(data-bs-toggle="modal" data-bs-target="#exampleModal") Delete
