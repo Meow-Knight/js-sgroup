@@ -1,7 +1,7 @@
 extends ../layout/main.pug
 
 block content
-    form(action='/auth/login?case=0' method='POST')
+    form(action='/auth/login?case=DEFAULT' method='POST')
         .mb-3
             label.form-label(for='exampleInputEmail1') Email address
             input.form-control(type='email' aria-describedby='emailHelp' name='email')

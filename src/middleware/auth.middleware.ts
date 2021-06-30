@@ -1,7 +1,6 @@
 import SessionModel from "../model/session";
 import { NextFunction, Request, Response } from "express";
 import envConfig from "../env";
-import { Session } from "inspector";
 import { SessionPayload } from '../dto/SessionPayload';
 
 interface ExtendedRequestWithUser extends Request {

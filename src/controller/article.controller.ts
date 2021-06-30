@@ -1,8 +1,4 @@
 module.exports = {
-    findOne() {
-
-    },
-    findTwo() {
-
-    },
-}
+  findOne() {},
+  findTwo() {},
+};

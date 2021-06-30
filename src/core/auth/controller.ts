@@ -4,6 +4,7 @@ import { loginDto } from './dto/login.dto';
 import envConfig from "../../env";
 import { authService } from "./impl/serviceImpl";
 import { sessionService } from "../session/service";
+import { SocialCase } from "../../enum/socialCase";
 
 
 class Controller {
@@ -15,7 +16,7 @@ class Controller {
         this.sessionService = sessionService;
     }
     login = async (req : Request, res: Response, next: NextFunction) => {
-        const loginCase = Number.parseInt(req.query.case as string);
+        const loginCase : SocialCase = req.query.case as SocialCase;
 
         try {
             const sessionId = await this.authService.loginWithCase(loginDto(req.body), loginCase);
@@ -46,7 +47,7 @@ class Controller {
             return res.send("You didn't login");
         }
     
-        let session = await SessionModel.findOne({
+        const session = await SessionModel.findOne({
             _id: sessionId
         });
     

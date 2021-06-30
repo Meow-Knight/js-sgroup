@@ -21,22 +21,24 @@ app.use(cookieParser(envConfig.COOKIE_SECRET));
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(function (req, res, next) {
-    if (req.body._method) {
-        req.method = req.body._method_method;
-    }
+app.use((req, res, next) => {
+  if (req.body._method) {
+    req.method = req.body._method_method;
+  }
 
-    next();
+  next();
 });
 
-app.use(express.static(PUBLIC_PATH, {
+app.use(
+  express.static(PUBLIC_PATH, {
     etag: true,
     cacheControl: true,
-    maxAge: 8000
-}));
+    maxAge: 8000,
+  })
+);
 
 app.use('/', router);
 
 app.listen(envConfig.PORT, () => {
-    console.log(`Server is listening on ${envConfig.PORT}`)
+  console.log(`Server is listening on ${envConfig.PORT}`);
 });

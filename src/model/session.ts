@@ -7,11 +7,11 @@ export interface SessionPayload {
 
 export interface ISessionSchema extends Document {
     user: {
-        _id: String,
-        username: String,
+        _id: string,
+        username: string,
     },
-    expired: Number,
-    renewTime: Number
+    expired: number,
+    renewTime: number
 }
 
 const SessionSchema = new Schema<ISessionSchema>({

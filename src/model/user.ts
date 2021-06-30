@@ -2,14 +2,14 @@ import { model, Schema } from 'mongoose';
 import { updateHook } from './hook/updateHook';
 
 const UserSchema = new Schema({
-    email: String,
-    password: String,
-    createdAt: {
-        type: Date
-    },
-    updatedAt: {
-        type: Date
-    }
+  email: String,
+  password: String,
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
 });
 
 UserSchema.pre('save', updateHook);

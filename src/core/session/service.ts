@@ -22,7 +22,7 @@ class SessionService implements ISessionService {
         });
     }
 
-    async deleteById(sessionId: String) : Promise<void> {
+    async deleteById(sessionId: string) : Promise<void> {
         await SessionModel.deleteOne({
             _id: sessionId,
         });
